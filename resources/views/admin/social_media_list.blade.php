@@ -52,7 +52,7 @@
                                     <td> {{ $say}}</td>
                                     <td> {{ $list->name }}</td>
                                     <td> {{ $list->link }}</td>
-                                    <td> {{ $list->icon }}</td>
+                                    <td> {!! $list->icon !!}</td>
                                     <td> {{ $list->social_order }}</td>
                                     <td> {{ $list->status }}</td>
                                     <td>

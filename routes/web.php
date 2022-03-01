@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\PersonalInformationController;
+use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\SocialMediaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontController;
@@ -20,11 +21,14 @@ use App\Http\Controllers\FrontController;
 */
 
 //FRONT
-Route::get('/', [FrontController::class, 'index'])->name('index');
-Route::get('/resume', [FrontController::class, 'resume'])->name('resume');
-Route::get('/portfolio', [FrontController::class, 'portfolio'])->name('portfolio');
-Route::get('/blog', [FrontController::class, 'blog'])->name('blog');
-Route::get('/contact', [FrontController::class, 'contact'])->name('contact');
+Route::middleware('front.data.share')->group(function () {
+    Route::get('/', [FrontController::class, 'index'])->name('index');
+    Route::get('/resume', [FrontController::class, 'resume'])->name('resume');
+    Route::get('/portfolio', [FrontController::class, 'portfolio'])->name('portfolio');
+    Route::get('/blog', [FrontController::class, 'blog'])->name('blog');
+    Route::get('/contact', [FrontController::class, 'contact'])->name('contact');
+});
+
 
 //BACKEND
 Route::prefix('admin')->middleware('auth')->group(function () {
@@ -57,6 +61,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::post('/change-status', [SocialMediaController::class, 'changeStatus'])->name('admin.socialMedia.changeStatus');
         Route::post('/delete', [SocialMediaController::class, 'delete'])->name('admin.socialMedia.delete');
     });
+
+    Route::resource('portfolio', PortfolioController::class);
+
 
 });
 

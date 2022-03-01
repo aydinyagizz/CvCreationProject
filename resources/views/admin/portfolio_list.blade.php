@@ -1,19 +1,26 @@
 @extends('layouts.admin')
 
 @section('title')
-    Eğitim Bilgileri Listesi
+    Portfolio Listesi
 @endsection
 
 @section('css')
+    <style>
+        .table th img, .jsgrid .jsgrid-table th img, .table td img, .jsgrid .jsgrid-table td img {
+            width: 75px !important;
+            height: unset !important;
+            border-radius: unset !important;
+        }
+    </style>
 @endsection
 
 @section('content')
     <div class="page-header">
-        <h3 class="page-title"> Eğitim Bilgileri Listesi </h3>
+        <h3 class="page-title"> Portfolio Listesi </h3>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{route('admin.index')}}">Admin Paneli</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Eğitim Bilgileri Listesi</li>
+                <li class="breadcrumb-item active" aria-current="page">Portfolio Listesi</li>
             </ol>
         </nav>
     </div>
@@ -23,7 +30,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="col-md-4">
-                        <a href=" {{ route('admin.education.add') }}" class="btn btn-primary btn-block">Yeni Eğitim
+                        <a href=" {{ route('portfolio.create') }}" class="btn btn-primary btn-block">Yeni Portfolio
                             Ekle</a>
                     </div>
                 </div>
@@ -34,12 +41,11 @@
                             <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Eğitim Tarihi</th>
-                                <th>Bölüm</th>
-                                <th>Üniversite</th>
-                                <th>Açıklama</th>
+                                <th>Öne Çıkarılan Resim</th>
+                                <th>Başlığı</th>
+                                <th>Etiketler</th>
+                                <th>Hakkında</th>
                                 <th>Status</th>
-                                <th>Sırası</th>
                                 <th>Eklenme Tarihi</th>
                                 <th>Güncellenme Tarihi</th>
                                 <th>Düzenle</th>
@@ -52,10 +58,13 @@
 
                                 <tr id="{{$list->id}}">
                                     <td> {{ $say }}</td>
-                                    <td> {{ $list->education_date }}</td>
-                                    <td> {{ $list->university_branch }}</td>
-                                    <td> {{ $list->university_name }}</td>
-                                    <td> {{ $list->description }}</td>
+                                    <td>
+                                        <img src="{{ asset('storage/portfolio/'.$list->featuredImage->image) }}"
+                                             alt="">
+                                    </td>
+                                    <td> {{ $list->title }}</td>
+                                    <td> {{ $list->tags }}</td>
+                                    <td title="{!! strip_tags($list->about) !!}"> {!! strip_tags(substr($list->about, 0, 50)) !!}</td>
                                     <td>
                                         @if ($list->status)
                                             <a data-id="{{$list->id}}" href="javascript:void(0)"
@@ -65,7 +74,6 @@
                                                class="btn btn-danger changeStatus">Pasif</a>
                                         @endif
                                     </td>
-                                    <td>{{ $list->order }}</td>
                                     <td> {{ \Carbon\Carbon::parse($list->created_at)->format('d-m-Y H:i:s') }}</td>
                                     <td> {{ \Carbon\Carbon::parse($list->updated_at)->format('d-m-Y H:i:s') }}</td>
                                     <td><a href="{{ route('admin.education.add', ['educationID' => $list->id]) }}"

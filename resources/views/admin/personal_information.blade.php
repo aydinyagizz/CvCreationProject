@@ -46,10 +46,10 @@
                         <div class="form-group">
                             <label for="main_title">Anasayfa Başlık</label>
                             <input type="text" class="form-control" name="main_title" id="main_title"
-                                   placeholder="Eğitim Tarihi"
+                                   placeholder="Anasayfa Başlık"
                                    value="{{ $information->main_title }}">
                             {{--                            Hataları tek tek inputların altında gösterilmesi --}}
-                            @error('education_date')
+                            @error('main_title')
                             <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>

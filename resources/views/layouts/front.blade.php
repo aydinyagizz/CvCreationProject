@@ -42,7 +42,7 @@
             <h5 class="widget-title">Kişisel Bilgiler</h5>
             <div class="widget-content">
                 <p>Doğum Tarihi : {{ $personal->birthday }}</p>
-                <p>WEb Site : {{ $personal->website }}</p>
+                <p>Web Site : {{ $personal->website }}</p>
                 <p>Telefon : {{ $personal->phone }}</p>
                 <p>Mail : {{ $personal->mail }}</p>
                 <p>Adres : {{ $personal->address }}</p>
