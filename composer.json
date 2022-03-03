@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "biscolab/laravel-recaptcha": "^5.3",
         "fruitcake/laravel-cors": "^2.0.5",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/fortify": "^1.10",
@@ -13,7 +14,8 @@
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
         "rap2hpoutre/laravel-log-viewer": "^2.1",
-        "realrashid/sweet-alert": "^5.0"
+        "realrashid/sweet-alert": "^5.0",
+        "unisharp/laravel-filemanager": "^2.4"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",

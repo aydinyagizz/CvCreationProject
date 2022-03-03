@@ -19,7 +19,7 @@
         <h3 class="page-title"> Portfolio Listesi </h3>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{route('admin.index')}}">Admin Paneli</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Admin Paneli</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Portfolio Listesi</li>
             </ol>
         </nav>
@@ -59,8 +59,11 @@
                                 <tr id="{{$list->id}}">
                                     <td> {{ $say }}</td>
                                     <td>
-                                        <img src="{{ asset('storage/portfolio/'.$list->featuredImage->image) }}"
-                                             alt="">
+                                        <a href="{{ route('portfolio.showImages', ['id' => $list->id]) }}">
+                                            <img
+                                                src="{{ $list->featuredImage ? asset('storage/portfolio/'.$list->featuredImage->image) : '-'}}"
+                                                alt="">
+                                        </a>
                                     </td>
                                     <td> {{ $list->title }}</td>
                                     <td> {{ $list->tags }}</td>
@@ -76,10 +79,10 @@
                                     </td>
                                     <td> {{ \Carbon\Carbon::parse($list->created_at)->format('d-m-Y H:i:s') }}</td>
                                     <td> {{ \Carbon\Carbon::parse($list->updated_at)->format('d-m-Y H:i:s') }}</td>
-                                    <td><a href="{{ route('admin.education.add', ['educationID' => $list->id]) }}"
+                                    <td><a href="{{ route('portfolio.edit', ['portfolio' => $list->id]) }}"
                                            class="btn btn-primary editEducation"><i class="fa fa-edit"></i></a>
                                         <a data-id="{{$list->id}}" href="javascript:void(0)"
-                                           class="btn btn-danger deleteEducation"><i class="fa fa-trash"></i></a>
+                                           class="btn btn-danger deletePortfolio"><i class="fa fa-trash"></i></a>
                                     </td>
 
                                 </tr>
@@ -106,23 +109,23 @@
         });
 
         $('.changeStatus').click(function () {
-            let educationID = $(this).data('id');
+            let portfolioID = $(this).attr('data-id');
             let self = $(this);
             $.ajax({
-                url: "{{ route('admin.education.changeStatus') }}",
+                url: "{{ route('portfolio.changeStatus') }}",
                 // method: "POST"
                 type: "POST",
                 // async senkronize olmasın diyoruz
                 async: false,
                 data: {
-                    educationID: educationID
+                    id: portfolioID
                 },
                 success: function (response) {
 
                     swal.fire({
                         icon: 'success',
                         title: 'Başarılı',
-                        text: response.educationID + " ID'li kayıt durumu " + response.newStatus + " olarak güncellenmiştir.",
+                        text: response.portfolioID + " ID'li kayıt durumu " + response.newStatus + " olarak güncellenmiştir.",
                         confirmButtonText: 'Tamam'
                     });
                     if (response.status == 1) {
@@ -142,12 +145,13 @@
 
         });
 
-        $('.deleteEducation').click(function () {
-            let educationID = $(this).data('id');
+
+        $('.deletePortfolio').click(function () {
+            let portfolioID = $(this).attr('data-id');
 
             Swal.fire({
                 title: "Silmek istediğinize emin misiniz? ",
-                text: educationID + " ID'li eğitim bilgisini silmek istediğinize emin misniz?",
+                text: portfolioID + " ID'li portfolio bilgisini silmek istediğinize emin misniz?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -156,14 +160,18 @@
                 cancelButtonText: 'Hayır'
             }).then((result) => {
                 if (result.isConfirmed) {
+
+                    let route = '{{ route('portfolio.destroy', ['portfolio' => 'deletePortfolio']) }}';
+                    let finalRoute = route.replace('deletePortfolio', portfolioID);
                     $.ajax({
-                        url: "{{ route('admin.education.delete') }}",
+                        url: finalRoute,
                         // method: "POST"
                         type: "POST",
                         // async senkronize olmasın diyoruz
                         async: false,
                         data: {
-                            educationID: educationID
+                            portfolio: portfolioID,
+                            '_method': 'DELETE'
                         },
                         success: function (response) {
 
@@ -173,7 +181,7 @@
                                 text: "Silme işlemi başarılı.",
                                 confirmButtonText: 'Tamam'
                             });
-                            $("tr#" + educationID).remove();
+                            $("tr#" + portfolioID).remove();
                         },
                         error: function () {
 

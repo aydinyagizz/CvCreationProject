@@ -254,15 +254,15 @@ main {
             margin-bottom: 20px;
 
             @media (max-width: 991px) {
-                width: calc( 50% - 10px);
+                width: calc(50% - 10px);
             }
 
             @media (max-width: 767px) {
-                width: calc( 25% - 10px);
+                width: calc(25% - 10px);
             }
 
             @media (max-width: 575px) {
-                width: calc( 50% - 10px);
+                width: calc(50% - 10px);
             }
 
             img {
@@ -349,7 +349,7 @@ main {
         justify-content: space-between;
 
         .portfolio-item {
-            width: calc(25% - 10.5px);
+            width: calc(50% - 10.5px) !important;
             height: 300px;
             margin-bottom: 15px;
             background-color: #f2f2f2;
@@ -507,6 +507,7 @@ main {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
+
         .form-group {
             margin-bottom: 21px;
             width: 100%;
@@ -518,16 +519,17 @@ main {
                 @media (max-width: 991px) {
                     width: 100%;
                 }
-        
+
                 @media (max-width: 767px) {
                     width: calc(50% - 12.5px);
                 }
-        
+
                 @media (max-width: 575px) {
                     width: 100%;
                 }
             }
         }
+
         .form-control {
             border: 0;
             border-radius: 0;
@@ -677,7 +679,7 @@ main {
     }
 
     to {
-        transform: rotate3d(0, -1, 0, 104deg)translateX(-1px);
+        transform: rotate3d(0, -1, 0, 104deg) translateX(-1px);
     }
 }
 

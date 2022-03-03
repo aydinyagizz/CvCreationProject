@@ -19,4 +19,10 @@ class Portfolio extends Model
         return $this->hasOne('App\Models\PortfolioImage', 'portfolio_id', 'id')
             ->where('featured', 1);
     }
+
+    // tüm görselleri çekmek için
+    public function images()
+    {
+        return $this->hasMany('App\Models\PortfolioImage', 'portfolio_id', 'id');
+    }
 }

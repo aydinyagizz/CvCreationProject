@@ -19,6 +19,8 @@
     <!-- Layout styles -->
     <link rel="stylesheet" href=" {{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/sweet-alert/sweetalert2.min.css') }}">
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+{{--    <script src="https://www.google.com/recaptcha/api.js" async defer></script>--}}
 
 @yield('css')
 
@@ -26,6 +28,7 @@
     <link rel="shortcut icon" href=" {{ asset('assets/images/favicon.png') }}"/>
 
     <script src="https://cdn.ckeditor.com/4.17.2/standard/ckeditor.js"></script>
+
 </head>
 <body>
 <div class="container-scroller">
@@ -148,7 +151,6 @@
                     <span class="menu-title">Portfolio Yönetimi</span>
                 </a>
             </li>
-
 
 
             {{--            <li class="nav-item menu-items">--}}
@@ -398,16 +400,20 @@
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item preview-item">
-                                <div class="preview-thumbnail">
-                                    <div class="preview-icon bg-dark rounded-circle">
-                                        <i class="mdi mdi-logout text-danger"></i>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <a class="dropdown-item preview-item" href="{{route('logout')}}"
+                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
+                                    <div class="preview-thumbnail">
+                                        <div class="preview-icon bg-dark rounded-circle">
+                                            <i class="mdi mdi-logout text-danger"></i>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="preview-item-content">
-                                    <p class="preview-subject mb-1">Log out</p>
-                                </div>
-                            </a>
+                                    <div class="preview-item-content">
+                                        <p class="preview-subject mb-1">Çıkış Yap</p>
+                                    </div>
+                                </a>
+                            </form>
                             <div class="dropdown-divider"></div>
                             <p class="p-3 mb-0 text-center">Advanced settings</p>
                         </div>

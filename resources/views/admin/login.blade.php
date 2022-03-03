@@ -16,9 +16,34 @@
     <!-- Layout styles -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <!-- End layout styles -->
-
+    <!-- IMPORTANT!!! remember CSRF token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}"/>
+
+    @if (config('recaptcha.status') && config('recaptcha.version') == 'v2')
+    {!! htmlScriptTagJsApi() !!}
+    @elseif(config('recaptcha.status') && config('recaptcha.version') == 'v3')
+        <script type="text/javascript">
+            function callbackThen(response){
+                // read HTTP status
+                console.log(response.status);
+
+                // read Promise object
+                response.json().then(function(data){
+                    console.log(data);
+                });
+            }
+            function callbackCatch(error){
+                console.error('Error:', error)
+            }
+        </script>
+        {!! htmlScriptTagJsApi([
+            'action' => 'homepage',
+            'callback_then' => 'callbackThen',
+            'callback_catch' => 'callbackCatch'
+        ]) !!}
+    @endif
 
 
 </head>
@@ -40,6 +65,12 @@
                             <div class="form-group">
                                 <label for="password">Password *</label>
                                 <input type="password" id="password" class="form-control p_input" name="password">
+                            </div>
+                            <div class="form-group">
+                                @if (config('recaptcha.status') && config('recaptcha.version') == 'v2')
+                                    {!! htmlFormSnippet() !!}
+                                @endif
+
                             </div>
                             <div class="form-group d-flex align-items-center justify-content-between">
                                 <div class="form-check">

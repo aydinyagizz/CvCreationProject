@@ -5,6 +5,7 @@ use App\Http\Controllers\EducationController;
 use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\PersonalInformationController;
 use App\Http\Controllers\PortfolioController;
+use App\Http\Controllers\RecaptchaController;
 use App\Http\Controllers\SocialMediaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontController;
@@ -25,9 +26,15 @@ Route::middleware('front.data.share')->group(function () {
     Route::get('/', [FrontController::class, 'index'])->name('index');
     Route::get('/resume', [FrontController::class, 'resume'])->name('resume');
     Route::get('/portfolio', [FrontController::class, 'portfolio'])->name('portfolio');
+    Route::get('/portfolio/{id}', [FrontController::class, 'portfolioDetail'])->name('portfolio.detail')->whereNumber('id');
     Route::get('/blog', [FrontController::class, 'blog'])->name('blog');
     Route::get('/contact', [FrontController::class, 'contact'])->name('contact');
 });
+
+
+
+Route::get('recaptcha/validate', [RecaptchaController::class], 'validateV3');
+
 
 
 //BACKEND
@@ -63,8 +70,16 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     });
 
     Route::resource('portfolio', PortfolioController::class);
+    Route::post('portfolio/change-status', [PortfolioController::class, 'changeStatus'])->name('portfolio.changeStatus');
+    Route::get('portfolio/images/{id}', [PortfolioController::class, 'showImages'])->name('portfolio.showImages')->whereNumber('id');
+    Route::post('portfolio/images/{id}', [PortfolioController::class, 'newImage'])->name('portfolio.newImage')->whereNumber('id');
+    Route::delete('portfolio/images/{id}', [PortfolioController::class, 'deleteImage'])->name('portfolio.deleteImage')->whereNumber('id');
+    Route::put('portfolio/images/{id}', [PortfolioController::class, 'featureImage'])->name('portfolio.featureImage')->whereNumber('id');
+    Route::post('portfolio/images/{id}/change-status', [PortfolioController::class, 'changeStatusImage'])->name('portfolio.changeStatusImage')->whereNumber('id');
 
-
+    Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
+        \UniSharp\LaravelFilemanager\Lfm::routes();
+    });
 });
 
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);

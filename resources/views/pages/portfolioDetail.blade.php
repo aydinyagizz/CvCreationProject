@@ -1,38 +1,52 @@
 @extends('layouts.front')
 
 @section('title')
-    Portfolio
+    {{ $portfolio->title }}
 @endsection
 
 @section('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/magnific-popup.css') }}">
 @endsection
 
 @section('content')
     <section class="portfolio-section">
-        <h2 class="section-title">PORTFOLIO</h2>
-
-        <div class="portfolio-wrapper">
-            @foreach($portfolio as $item)
-                <figure class="portfolio-item hover-box">
-                    {{--                    'assets/images/img_1.png'--}}
-                    <a href="{{ route('portfolio.detail', ['id' => $item->id]) }}">
+        <h2 class="section-title">{{ $portfolio->title }}</h2>
+{{--TODO: tags etiketlerini virgilden ayırıp tek tek yazabiliriz.--}}
+            <span class="badge badge-primary"><small>{{$portfolio->tags}}</small></span>
+            <hr>
+            {!! $portfolio->about !!}
+            <hr>
+            <div class="portfolio-wrapper">
+                @foreach($portfolio->images as $item)
+                    <figure class="portfolio-item hover-box" href="{{ asset('storage/portfolio/' . $item->image) }}">
+                        {{--                    'assets/images/img_1.png'--}}
                         <img
-                            src=" {{ asset('storage/portfolio/' . $item->featuredImage->image) }}"
-                            alt="{{ $item->title }}"
+                            src=" {{ asset('storage/portfolio/' . $item->image) }}"
+                            alt="{{ $portfolio->title }}"
                             class="portfolio-item-img">
-                    </a>
-                    <figcaption class="portfolio-item-details overlay">
-                        <h5 class="portfolio-item-title">{{ $item->title }}</h5>
-                        <p class="portfolio-item-description">{{ $item->tags }}</p>
-                    </figcaption>
-                </figure>
 
-            @endforeach
 
-        </div>
+                    </figure>
+
+                @endforeach
+
+            </div>
 
     </section>
 @endsection
 
 @section('js')
+    <script src="{{ asset('assets/js/jquery.magnific-popup.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('.portfolio-item').magnificPopup({
+                gallery: {
+                    enabled: true
+                },
+                type: 'image' // this is default type
+            });
+
+        });
+    </script>
 @endsection

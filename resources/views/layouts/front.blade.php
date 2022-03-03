@@ -48,7 +48,7 @@
                 <p>Adres : {{ $personal->address }}</p>
 
                 <a href="{{ asset('storage/cv/'. $personal->cv) }}" target="_blank" class="btn btn-download-cv btn-primary rounded-pill"><img
-                        src="assets/images/download.svg"
+                        src="{{asset('assets/images/download.svg')}}"
                         class="btn-img">Özgeçmişimi İndir
                 </a>
             </div>

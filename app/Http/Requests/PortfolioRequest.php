@@ -25,7 +25,7 @@ class PortfolioRequest extends FormRequest
     {
         return [
             'title' => 'required|min:2:max:255',
-            'tags' => 'required|min:2:max:255',
+            'tags' => 'required|max:255',
 //            resimler tek bir tane değil çoklu geldiği için 'images.*' yapıyoruz.
             'images.*' => 'mimes:png,jpg,jpeg|max:2048',
         ];
@@ -38,7 +38,6 @@ class PortfolioRequest extends FormRequest
             "title.min" => "Başlık alanı en az 2 karakter olmalıdır.",
             "title.max" => "Başlık alanı en fazla 255 karakter olmalıdır.",
             "tags.required" => "Etiket alanı bilgisi girilmesi zorunludur.",
-            "tags.min" => "Etiket alanı en az 2 karakter olmalıdır.",
             "tags.max" => "Etiket alanı en fazla 255 karakter olmalıdır.",
             "images.*.mimes" => "Resimler .png, .jpg, .jpeg olabilir.",
             "images.*.max" => "Resimler en fazla 2MB olabilir.",

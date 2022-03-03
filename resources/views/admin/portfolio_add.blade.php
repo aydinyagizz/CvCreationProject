@@ -9,6 +9,8 @@
 @endsection
 
 @section('css')
+    /*admin.blade.php sayfasında olduğu için çaıkışıyor ve editör içerisinde resime izin verimiyor.*/
+{{--    <script src="https://cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>--}}
 @endsection
 
 @section('content')
@@ -28,10 +30,13 @@
             <div class="card">
                 <div class="card-body">
 
-                    <form class="forms-sample" id="portfolioForm" method="POST" action="{{ route('portfolio.store') }}"
+                    <form class="forms-sample" id="portfolioForm" method="POST"
+                          action="{{ isset($portfolio) ? route('portfolio.update', ['portfolio' => request('portfolio')]) : route('portfolio.store') }}"
                           enctype="multipart/form-data">
                         @csrf
-
+                        @isset($portfolio)
+                            @method('PUT')
+                        @endisset
 
 
                         {{--                        Hataları çoklu şekilde nerede hata varsa hepsini çoklu halde gösterir--}}
@@ -47,8 +52,8 @@
                             <label for="title">Başlık</label>
                             <input type="text" class="form-control" name="title" id="title"
                                    placeholder="Başlık"
-                                {{--                                   value="{{ $portfolio->title }}"--}}
-                            >
+                                   {{--                                   ?? isset fonksiyonu gibi --}}
+                                   value="{{ $portfolio->title ?? '' }}">
                             {{--                            Hataları tek tek inputların altında gösterilmesi --}}
                             @error('title')
                             <div class="alert alert-danger">{{ $message }}</div>
@@ -59,8 +64,7 @@
                             <label for="tags">Etiketler</label>
                             <input type="text" class="form-control" name="tags" id="tags"
                                    placeholder="Etiketler"
-                                {{--                                   value="{{ $portfolio->title }}"--}}
-                            >
+                                   value="{{ $portfolio->tags ?? '' }}">
                             {{--                            Hataları tek tek inputların altında gösterilmesi --}}
                             @error('tags')
                             <div class="alert alert-danger">{{ $message }}</div>
@@ -71,7 +75,7 @@
                         <div class="form-group">
                             <label for="about">Portfolio Hakkında</label>
                             <textarea class="form-control" name="about" id="about" cols="30" rows="10"
-                                      placeholder="Portfolio Hakkında">
+                                      placeholder="Portfolio Hakkında">{!! $portfolio->about ?? '' !!}
                             </textarea>
                             {{--                            Hataları tek tek inputların altında gösterilmesi --}}
                             @error('about')
@@ -86,8 +90,7 @@
                             <label for="website">Web Site</label>
                             <input type="text" class="form-control" name="website" id="website"
                                    placeholder="Web Site"
-                                {{--                                   value="{{ $portfolio->title }}"--}}
-                            >
+                                   value="{{ $portfolio->website ?? '' }}">
                             {{--                            Hataları tek tek inputların altında gösterilmesi --}}
                             @error('website')
                             <div class="alert alert-danger">{{ $message }}</div>
@@ -98,8 +101,7 @@
                             <label for="keywords">Keywords</label>
                             <input type="text" class="form-control" name="keywords" id="keywords"
                                    placeholder="Keywords"
-                                {{--                                   value="{{ $portfolio->title }}"--}}
-                            >
+                                   value="{{ $portfolio->keywords ?? '' }}">
                             {{--                            Hataları tek tek inputların altında gösterilmesi --}}
                             @error('keywords')
                             <div class="alert alert-danger">{{ $message }}</div>
@@ -109,7 +111,7 @@
                         <div class="form-group">
                             <label for="description">Description</label>
                             <textarea class="form-control" name="description" id="description" cols="30" rows="10"
-                                      placeholder="Description">
+                                      placeholder="Description">{!! $portfolio->description ?? '' !!}
                             </textarea>
                             {{--                            Hataları tek tek inputların altında gösterilmesi --}}
                             @error('description')
@@ -120,22 +122,27 @@
                             CKEDITOR.replace('description');
                         </script>
 
-                        <div class="form-group">
-                            <label for="images">Portfolio Görselleri</label>
-                            <input type="file" multiple class="form-control" name="images[]" id="images"
-                                   placeholder="Keywords">
-                            {{--                            Hataları tek tek inputların altında gösterilmesi --}}
-                            @if($errors->has('images.*'))
-                                @foreach($errors->get('images.*') as $key=>$value)
-                                    <div class="alert alert-danger">{{ $errors->first($key) }}</div>
-                                @endforeach
-                            @endif
-                        </div>
+                        @isset($portfolio)
+                        @else
+                            <div class="form-group">
+                                <label for="images">Portfolio Görselleri</label>
+                                <input type="file" multiple class="form-control" name="images[]" id="images"
+                                       placeholder="Keywords">
+                                {{--                            Hataları tek tek inputların altında gösterilmesi --}}
+                                @if($errors->has('images.*'))
+                                    @foreach($errors->get('images.*') as $key=>$value)
+                                        <div class="alert alert-danger">{{ $errors->first($key) }}</div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        @endisset
 
                         <div class="form-group">
                             <div class="form-check form-check-success">
                                 <label for="status" class="form-check-label">
-                                    <input type="checkbox" name="status" id="status" class="form-check-input"> Portfolio
+                                    <input type="checkbox" name="status" id="status"
+                                           class="form-check-input" {{ isset($portfolio) ? ($portfolio->status ? 'checked' : '' ) : '' }}>
+                                    Portfolio
                                     Anasayfa da Gösterilme Durumu
                                 </label>
                             </div>
@@ -145,7 +152,8 @@
                         </div>
 
 
-                        <button type="button" class="btn btn-primary me-2" id="createButton">Kaydet</button>
+                        <button type="button" class="btn btn-primary me-2"
+                                id="createButton">{{ isset($portfolio) ? 'Güncelle' : 'Kaydet' }}</button>
 
                     </form>
                 </div>
@@ -155,7 +163,22 @@
 @endsection
 
 @section('js')
+
     <script>
+
+        var options = {
+            filebrowserImageBrowseUrl: '/admin/laravel-filemanager?type=Images',
+            filebrowserImageUploadUrl: '/admin/laravel-filemanager/upload?type=Images&_token=',
+            filebrowserBrowseUrl: '/admin/laravel-filemanager?type=Files',
+            filebrowserUploadUrl: '/admin/laravel-filemanager/upload?type=Files&_token='
+        };
+        var about = CKEDITOR.replace('about', options
+        //     {
+        //     extraAllowedContent: 'div',
+        //     height: 150,
+
+        // }
+        );
 
         // var editor1 = CKEDITOR.replace('ck1');
 
@@ -167,6 +190,30 @@
 
         });
 
+        @isset($portfolio)
+        let createButton = $('#createButton');
+        createButton.click(function () {
+            if ($('#title').val().trim() == '') {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Uyarı !',
+                    text: 'Başlık alanı boş bırakılamaz.',
+                    confirmButtonText: 'Tamam'
+                });
+            } else if ($('#tags').val().trim() == '') {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Uyarı !',
+                    text: 'Etiket alanı boş bırakılamaz.',
+                    confirmButtonText: 'Tamam'
+                });
+            } else {
+                // else durumunda formu post ediyoruz.
+                $('#portfolioForm').submit();
+            }
+
+        });
+        @else
         function imageCheck(images) {
             //uzunluğu
             let length = images[0].files.length;
@@ -234,6 +281,8 @@
             }
 
         });
+        @endisset
+
     </script>
 
 

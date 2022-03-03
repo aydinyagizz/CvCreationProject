@@ -7862,7 +7862,7 @@ main {
     flex-wrap: wrap;
     justify-content: space-between; }
     main .portfolio-wrapper .portfolio-item {
-      width: calc(25% - 10.5px);
+      width: calc(50% - 10.5px);
       height: 300px;
       margin-bottom: 15px;
       background-color: #f2f2f2;
